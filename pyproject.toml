@@ -1,0 +1,30 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "valyze-engine"
+version = "0.1.0"
+description = "An AI-powered data pricing oracle delivered as a microservice."
+authors = ["Minkalla Technologies <contact@minkalla.com>"]
+license = "Apache-2.0"
+readme = "README.md"
+repository = "https://github.com/minkalla/valyze"
+homepage = "https://github.com/minkalla/valyze"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.12"
+fastapi = "^0.111.0"
+uvicorn = {extras = ["standard"], version = "^0.29.0"}
+# Future ML/AI dependencies will be added here
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.4"
+httpx = "^0.27.0" # For testing FastAPI endpoints
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"
+testpaths = [
+    "tests",
+]
