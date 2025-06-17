@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
-from ..main import app
-from ..schemas import ValyzeInputSchema
+from app.main import app
+from app.schemas import ValyzeInputSchema
 
 client = TestClient(app)
 
