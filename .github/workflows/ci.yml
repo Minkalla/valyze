@@ -28,9 +28,9 @@
               virtualenvs-in-project: true
               installer-parallel: true
 
-          - name: Generate poetry.lock (for CI compatibility) # <-- NEW STEP
+          - name: Generate poetry.lock (for CI compatibility)
             working-directory: .
-            run: poetry lock --no-update # --no-update ensures it only locks based on existing pyproject.toml
+            run: poetry lock --no-update
 
           - name: Install Python dependencies
             working-directory: .
@@ -39,6 +39,8 @@
           - name: Run Python tests
             working-directory: .
             run: poetry run pytest
+            env: # <-- CRITICAL CHANGE: Set PYTHONPATH for this step
+              PYTHONPATH: ${{ github.workspace }} # Set to the root of the repo where 'app' is located
 
           - name: Run Python linting and formatting checks
             working-directory: .
