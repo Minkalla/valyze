@@ -13,7 +13,8 @@
       ]
     }
   },
-  "postCreateCommand": "python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install poetry && poetry install --no-root",
+  // MODIFIED: Removed '&& poetry install --no-root' from the end
+  "postCreateCommand": "python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install poetry",
   "portsAttributes": {
     "3002": {
       "label": "Valyze API",
