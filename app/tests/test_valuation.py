@@ -20,7 +20,7 @@ def test_submit_data_for_valuation_success():
     
     response = client.post(
         "/valyze/data",
-        json={"input_data": test_data.dict()}
+        json={"input_data": test_data.model_dump()}
     )
     
     assert response.status_code == 200
@@ -37,7 +37,9 @@ def test_submit_data_for_valuation_invalid_input():
     )
     assert response.status_code == 422
     assert "detail" in response.json()
-    assert any("data_id" in error["loc"] for error in response.json()["detail"])
+    assert any(
+        "data_id" in loc for error_detail in response.json()["detail"] for loc in error_detail.get("loc", [])
+    )
 
 def test_submit_data_for_valuation_different_priority():
     test_data = ValyzeInputSchema(
@@ -50,7 +52,7 @@ def test_submit_data_for_valuation_different_priority():
     
     response = client.post(
         "/valyze/data",
-        json={"input_data": test_data.dict(by_alias=True)}
+        json={"input_data": test_data.model_dump()}
     )
     
     assert response.status_code == 200
