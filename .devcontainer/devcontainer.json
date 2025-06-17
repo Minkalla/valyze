@@ -1,44 +1,34 @@
-// For more info, see: https://containers.dev/implementors/json_schema/
 {
-    "name": "Valyze Development Environment",
-    "image": "mcr.microsoft.com/devcontainers/universal:2", // Using a universal base image for broad compatibility
-
-    "features": {
-        // Python feature: Pin to 3.10 for compatibility with pyproject.toml
-        "ghcr.io/devcontainers/features/python:1": {
-            "version": "3.10",
-            "installPoetry": "false" // Poetry installation handled explicitly in postCreateCommand for robustness
-        },
-        // Rust feature: Required for potential Rust components in Valyze (even if minor or future)
-        "ghcr.io/devcontainers/features/rust:1": {
-            "version": "1.70.0" // Specify a stable Rust version
-        },
-        // Node.js feature: Included for potential future frontend development or shared tooling with ZynConsent
-        "ghcr.io/devcontainers/features/node:1": {
-            "version": "20" // Use Node.js LTS version
-        }
-    },
-
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                // Essential Python extensions
-                "ms-python.python",
-                "ms-python.vscode-pylance", // Language server for intelligent code completion and error checking
-                // Formatting and Linting extensions
-                "esbenp.prettier-vscode", // Code formatter for consistent style
-                "dbaeumer.vscode-eslint", // Linter for JavaScript/TypeScript (useful for future frontend)
-                // Rust extension
-                "rust-lang.rust-analyzer", // Language server for Rust
-                // GitHub Actions extension for CI workflow editing
-                "github.vscode-github-actions"
-            ]
-        }
-    },
-
-    // Commands to run after the container is created (e.g., to install dependencies, build projects)
-    "postCreateCommand": "python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install poetry && cd app && poetry install --no-root && cd ..",
-    
-    // Configure remoteUser to be 'codespace' to ensure consistent permissions
-    "remoteUser": "codespace"
+  "name": "Valyze Development Environment",
+  // Changed base image to a Python-focused one, which is usually smaller.
+  // We explicitly chose 3.10 previously, so let's stick to that for consistency.
+  "image": "mcr.microsoft.com/devcontainers/python:3.10",
+  "features": {
+    // The base image already has Python.
+    // If Valyze has NO Rust or Node.js dependencies/tools, we remove those features entirely.
+    // Based on its MVP scope, Valyze is primarily Python/FastAPI.
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        // Removed Prettier and ESLint as they are primarily for JS/TS, unlikely needed for Valyze.
+        // If Valyze uses any specific VS Code extensions, you can add them here.
+        "github.vscode-github-actions"
+      ]
+    }
+  },
+  // Ensure Poetry is installed and then install Python dependencies.
+  "postCreateCommand": "python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install poetry && poetry install --no-root",
+  "remoteUser": "codespace",
+  "portsAttributes": {
+    "3002": {
+      "label": "Valyze API",
+      "onAutoForward": "openBrowser",
+      "onForward": "openBrowser",
+      "urlFormat": "http://localhost:3002/docs"
+    }
+  },
+  "forwardPorts": [3002]
 }
