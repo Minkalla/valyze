@@ -1,27 +1,19 @@
 {
   "name": "Valyze Development Environment",
-  // Changed base image to a Python-focused one, which is usually smaller.
-  // We explicitly chose 3.10 previously, so let's stick to that for consistency.
   "image": "mcr.microsoft.com/devcontainers/python:3.10",
   "features": {
-    // The base image already has Python.
-    // If Valyze has NO Rust or Node.js dependencies/tools, we remove those features entirely.
-    // Based on its MVP scope, Valyze is primarily Python/FastAPI.
+    // No features specified for Valyze, as per previous optimization
   },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-python.python",
         "ms-python.vscode-pylance",
-        // Removed Prettier and ESLint as they are primarily for JS/TS, unlikely needed for Valyze.
-        // If Valyze uses any specific VS Code extensions, you can add them here.
         "github.vscode-github-actions"
       ]
     }
   },
-  // Ensure Poetry is installed and then install Python dependencies.
   "postCreateCommand": "python3 -m pip install --user pipx && python3 -m pipx ensurepath && pipx install poetry && poetry install --no-root",
-  "remoteUser": "codespace",
   "portsAttributes": {
     "3002": {
       "label": "Valyze API",
