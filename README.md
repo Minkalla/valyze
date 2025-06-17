@@ -19,7 +19,7 @@ Valyze is a foundational component of the Minkalla ecosystem, focused on providi
 * **Basic Data Provenance Logging:** Minimal logging of valuation events for auditability.
 * **Minimal Schema Registration:** Basic Pydantic schema validation for input data to the valuation API.
 * **Health Check:** `GET /health` to verify service operational status.
-* **API Documentation:** Built-in Swagger UI for easy API exploration.
+* **API Documentation:** Built-in Swagger UI for easy API exploration, automatically redirecting from the root URL.
 * **Unit Tested:** Core API endpoints and valuation logic are covered by comprehensive unit tests.
 
 ## Getting Started
@@ -27,33 +27,42 @@ Valyze is a foundational component of the Minkalla ecosystem, focused on providi
 ### Prerequisites
 
 * Python 3.10+ and Poetry installed.
-* (Optional but Recommended for Development): GitHub Codespaces for a pre-configured cloud development environment. A `.devcontainer` configuration is included for easy setup.
+* **Recommended for Development:** GitHub Codespaces for a consistent, pre-configured cloud development environment. A `.devcontainer` configuration is included for easy setup.
 
 ### Local Development Setup (Using Codespaces)
 
-If you are using GitHub Codespaces, the environment (Python, Poetry, etc.) will be automatically set up for you based on the `.devcontainer` configuration. The `postCreateCommand` will automatically install Python dependencies (`poetry install`).
+This project is optimized for development within **GitHub Codespaces**. Your Codespace environment (including Python, `pipx`, and `Poetry`) will be automatically set up for you based on the `.devcontainer` configuration.
 
-1.  **Launch Codespace:**
-    Go to your [Valyze GitHub repository](https://github.com/minkalla/valyze), click the green `< > Code` button, select the `Codespaces` tab, and launch your Codespace.
-2.  **Verify Setup (Optional):**
-    Once the Codespace loads, you can verify installations in the terminal:
+**Recommended Codespace Machine Type:**
+Due to the size of Python dependencies and the build process, we highly recommend using a **4-core (or higher)** Codespace machine type (e.g., "4-core, 16GB RAM + 32GB Storage") to ensure smooth environment provisioning and avoid "no space left on device" errors. Select this option when creating your Codespace.
 
+**Initial Setup (After Codespace Launches):**
+
+After your Codespace has successfully launched and you see the terminal prompt, you need to install the project-specific Python dependencies. This is a crucial one-time manual step:
+
+1.  **Install Python Dependencies:**
+    Navigate to the repository root in your terminal (`/workspaces/valyze`) and run:
     ```bash
-    python3 --version
-    poetry --version
+    poetry install --no-root
     ```
+    This command will install all required packages into your Poetry virtual environment.
 
-    You should see their respective versions.
-3.  **Run the FastAPI Application:**
-    Navigate to the Valyze repository root directory and start the server:
+### Running the Valyze API Locally
 
+Once your development environment is fully set up (after running `poetry install --no-root`), you can start the FastAPI application:
+
+1.  **Start the Uvicorn Server:**
+    From the repository root in your terminal, run:
     ```bash
-    poetry run uvicorn app.main:app --reload --port 3002 --app-dir app/
+    PYTHONPATH=. poetry run uvicorn app.main:app --reload --port 3002
     ```
-
     You should see output indicating the server is running on `http://127.0.0.1:3002`.
-4.  **Access API Documentation:**
-    Open your web browser and navigate to `http://localhost:3002/docs` (or the Codespaces forwarded URL ending in `/docs`). You will see the interactive Swagger UI.
+
+2.  **Access the API Documentation (Swagger UI):**
+    Open your web browser (via Codespaces Port Forwarding) and navigate to:
+    `http://localhost:3002/`
+
+    The API will now automatically redirect you to the interactive Swagger UI at `http://localhost:3002/docs`.
 
 ### API Endpoints
 
@@ -118,11 +127,14 @@ Checks the health of the service.
 
 ## Running Tests
 
-To run the unit tests for Valyze:
+To execute the unit tests for Valyze:
 
-```bash
-poetry run pytest
-```
+1.  **Run Pytest:**
+    From the repository root in your terminal, run:
+    ```bash
+    PYTHONPATH=. poetry run pytest
+    ```
+    All tests should pass, and you will see a summary of the test results.
 
 ## Contribution
 
