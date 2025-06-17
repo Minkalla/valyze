@@ -5,6 +5,7 @@ from .models.simple_valuation_model import SimpleValuationModel
 from .models.base_valuation_model import BaseValuationModel
 import logging
 from .schemas import ValyzeInputSchema
+from starlette.responses import RedirectResponse
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -34,6 +35,10 @@ class ValuationResponse(BaseModel):
     model_used: str
     model_version: str
     message: str = "Data valuation completed successfully."
+
+@app.get("/")
+async def redirect_to_docs():
+    return RedirectResponse(url="/docs")
 
 @app.get("/health", summary="Health check endpoint")
 async def health_check():
