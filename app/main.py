@@ -1,28 +1,28 @@
-    from fastapi import FastAPI, HTTPException, status
-    from pydantic import BaseModel
-    from typing import Any, Dict
-    from .models.simple_valuation_model import SimpleValuationModel
-    from .models.base_valuation_model import BaseValuationModel
+from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
+from typing import Any, Dict
+from .models.simple_valuation_model import SimpleValuationModel
+from .models.base_valuation_model import BaseValuationModel
 
-    app = FastAPI(
+app = FastAPI(
         title="Valyze API - MVP",
         description="API for AI-powered data valuation (MVP) in the Minkalla Valyze module. "
                     "Utilizes a pluggable ML model interface.",
         version="1.0.0",
     )
 
-    model_config = {
+model_config = {
         "name": "MVP_SimpleValuer",
         "version": "0.1.0",
         "base_value": 100,
         "multiplier_factor": {"high_value": 2.0, "medium_value": 1.0, "low_value": 0.5}
     }
-    valuation_model: BaseValuationModel = SimpleValuationModel(model_config)
+valuation_model: BaseValuationModel = SimpleValuationModel(model_config)
 
-    class ValuationRequest(BaseModel):
+class ValuationRequest(BaseModel):
         data: Dict[str, Any]
 
-    class ValuationResponse(BaseModel):
+class ValuationResponse(BaseModel):
         valuation_score: float
         confidence_score: float
         valuation_timestamp: str
@@ -30,20 +30,20 @@
         model_version: str
         message: str = "Data valuation completed successfully."
 
-    @app.get("/health", summary="Health check endpoint")
-    async def health_check():
+@app.get("/health", summary="Health check endpoint")
+async def health_check():
         """
         Returns the status of the Valyze service.
         """
         return {"status": "ok", "service": "Valyze MVP"}
 
-    @app.post(
+@app.post(
         "/valyze/data",
         response_model=ValuationResponse,
         summary="Submit data for valuation",
         status_code=status.HTTP_200_OK,
     )
-    async def submit_data_for_valuation(request: ValuationRequest):
+async def submit_data_for_valuation(request: ValuationRequest):
         """
         Submits an arbitrary data payload for valuation by the configured ML model.
         For MVP, it uses the SimpleValuationModel.
